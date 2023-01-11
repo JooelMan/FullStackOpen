@@ -2,6 +2,21 @@ import { useState } from 'react'
 
 const Button = ({ handleClick, text }) => <button onClick={handleClick}>{text}</button>
 const Stat = ({ text, value }) => <p>{text} {value}</p>
+const Statistics = (props) => {
+  if (props.all === 0) {
+    return <p>No feedback given</p>
+  }
+  return (
+    <>
+      <Stat text='good' value={props.good}/>
+      <Stat text='neutral' value={props.neutral}/>
+      <Stat text='bad' value={props.bad}/>
+      <Stat text='all' value={props.all}/>
+      <Stat text='average' value={props.average}/>
+      <Stat text='positive' value={props.positive}/>
+    </>
+  )
+}
 
 const App = () => {
   // tallenna napit omaan tilaansa
@@ -21,7 +36,7 @@ const App = () => {
     if (all === 0 || good === 0) {
       return '0 %'
     } else {
-      const res = good / all
+      const res = (good / all) * 100
       return `${res} %`
     }
   }
@@ -34,12 +49,7 @@ const App = () => {
       <Button handleClick={() => setNeutral(neutral + 1)} text='neutral'/>
       <Button handleClick={() => setBad(bad + 1)} text='bad'/>
       <h1>statistics</h1>
-      <Stat text='good' value={good}/>
-      <Stat text='neutral' value={neutral}/>
-      <Stat text='bad' value={bad}/>
-      <Stat text='all' value={all}/>
-      <Stat text='average' value={average}/>
-      <Stat text='positive' value={positive}/>
+      <Statistics good={good} neutral={neutral} bad={bad} all={all} average={average} positive={positive}/>
     </div>
   )
 }
