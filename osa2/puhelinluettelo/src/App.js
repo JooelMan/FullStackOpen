@@ -45,6 +45,13 @@ const App = () => {
     setNewFilter(event.target.value)
   }
 
+  const deleteNumber = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      setPersons(persons.filter(p => p.id !== id))
+      personService.deleteFromServer(id)
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -56,7 +63,7 @@ const App = () => {
         submitOC={handleNewNumber}
       />
       <h3>Numbers</h3>
-      <Numbers persons={persons} filter={filter} />
+      <Numbers persons={persons} filter={filter} deleteNum={deleteNumber}/>
     </div>
   )
 

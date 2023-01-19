@@ -22,15 +22,22 @@ const Filter = ({ v, oc }) => {
     )
   }
   
-  const Person = ({ name, number}) => <p>{name} {number}</p>
+  const Person = ({ id, name, number, deleteNum }) => (
+    <>
+      <p>
+        {name} {number}
+        <button onClick={() => deleteNum(id, name)}>delete</button>
+      </p>
+    </>
+  )
   
-  const Numbers = ({ persons, filter }) => {
+  const Numbers = ({ persons, filter, deleteNum }) => {
     const f = filter.toLowerCase()
     const filtered = persons.filter(p => p.name.toLowerCase().includes(f))
     return (
       <>
         {filtered.map(p =>
-          <Person key={p.name} name={p.name} number={p.number} />
+          <Person key={p.name} name={p.name} number={p.number} deleteNum={deleteNum} id={p.id} />
         )}
       </>
     )
