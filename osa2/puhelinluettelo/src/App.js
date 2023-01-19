@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Filter, PersonForm, Numbers } from './components/Numbers'
+import Notification from './components/Notification'
 import personService from './services/persons'
 
 const App = () => {
@@ -8,6 +9,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setNewFilter] = useState('')
+  const [notification, setNotification] = useState('')
 
   useEffect(() => {
     console.log('effect')
@@ -17,6 +19,13 @@ const App = () => {
         setPersons(returnedObjs)
       })
   }, [])
+  
+  const notificate = (message) => {
+    setNotification(message)
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+  }
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -24,6 +33,10 @@ const App = () => {
 
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
+  }
+
+  const handleFilterChange = (event) => {
+    setNewFilter(event.target.value)
   }
 
   const handleNewNumber = (event) => {
@@ -37,6 +50,7 @@ const App = () => {
           .then(returnedPerson => {
             setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
           })
+        notificate(`Updated the phone number of ${person.name}`)
       }
       return
     }
@@ -47,22 +61,21 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
-  }
-
-  const handleFilterChange = (event) => {
-    setNewFilter(event.target.value)
+    notificate(`Added ${newName}`)
   }
 
   const deleteNumber = (id, name) => {
     if (window.confirm(`Delete ${name}?`)) {
       setPersons(persons.filter(p => p.id !== id))
       personService.deleteFromServer(id)
+      notificate(`Deleted ${name}`)
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} />
       <Filter v={filter} oc={handleFilterChange} />
       <h3>Add a new</h3>
       <PersonForm
