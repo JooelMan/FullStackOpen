@@ -13,18 +13,22 @@ const App = () => {
     }, [filter])
 
   const onFilterChange = (event) => {
-    setFilter(event.target.value.toLowerCase())
+    setFilter(event.target.value)
   }
   
   const filterCountries = (
-    countries.filter(c => c.name.common.toLowerCase().includes(filter))
+    countries.filter(c => c.name.common.toLowerCase().includes(filter.toLowerCase()))
   )
+
+  const changeFilter = (newFilter) => {
+    setFilter(newFilter)
+  }
 
   return (
     <div>
       find countries 
       <input value={filter} onChange={onFilterChange} />
-      <CountryList countries={filterCountries} />
+      <CountryList countries={filterCountries} changeFilter={changeFilter} />
     </div>
   )
 }

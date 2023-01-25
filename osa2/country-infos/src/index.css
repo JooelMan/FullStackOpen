@@ -16,3 +16,7 @@ img {
   max-width: 40%;
   height: auto;
 }
+
+p {
+  margin: 0
+}

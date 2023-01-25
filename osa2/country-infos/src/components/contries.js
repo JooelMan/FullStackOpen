@@ -1,4 +1,4 @@
-const CountryList = ({countries}) => {
+const CountryList = ({countries, changeFilter}) => {
   if (countries.length > 10) {
     return <p>Too many matches, specify another filter</p>
   }
@@ -16,14 +16,14 @@ const CountryList = ({countries}) => {
         <ul>
         {Object.values(c.languages).map(l => <li>{l}</li>)}
         </ul>
-        <img src={c.flags.png}></img>
+        <img src={c.flags.png} alt=""></img>
     </div>
     )
   }
   return (
-    <ul>
-    {countries.map(c => <li>{c.name.common}</li>)}
-    </ul>
+    <div>
+        {countries.map(c => <p>{c.name.common}<button onClick={() => changeFilter(c.name.common)}>show</button></p>)}
+    </div>
   )
 }
 
