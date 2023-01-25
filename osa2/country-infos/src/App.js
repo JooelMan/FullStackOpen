@@ -1,15 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-
-const CountryList = ({countries}) => {
-  console.log(countries);
-  
-  return (
-    <ul>
-      {countries.map(c => <li>{c.name.common}</li>)}
-    </ul>
-  )
-}
+import CountryList from './components/contries'
 
 const App = () => {
   const [ filter, setFilter ] = useState('')
