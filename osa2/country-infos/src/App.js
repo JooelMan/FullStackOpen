@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
-import CountryList from './components/contries'
+import { CountryList, Weather } from './components/contries'
+import { getAllCountries, getWeather } from './services/filterService'
 
 const App = () => {
   const [ filter, setFilter ] = useState('')
   const [ countries, setCountries ] = useState([])
+  const [ city, setCity ] = useState('')
+  const [ weather, setWeather ] = useState(null)
 
   useEffect(() => {
-    axios
-      .get(`https://restcountries.com/v3.1/all`)
+    getAllCountries()
       .then(response => setCountries(response.data))
     }, [filter])
+
+  useEffect(() => {
+    getWeather(city)
+      .then(response => setWeather(response.data))
+      .catch(error => {})
+  }, [city])
 
   const onFilterChange = (event) => {
     setFilter(event.target.value)
@@ -24,11 +31,16 @@ const App = () => {
     setFilter(newFilter)
   }
 
+  const changeCity = (newCity) => {
+    setCity(newCity)
+  }
+
   return (
     <div>
       find countries 
       <input value={filter} onChange={onFilterChange} />
-      <CountryList countries={filterCountries} changeFilter={changeFilter} />
+      <CountryList countries={filterCountries} changeFilter={changeFilter} changeCity={changeCity} />
+      <Weather city={city} weather={weather} />
     </div>
   )
 }
