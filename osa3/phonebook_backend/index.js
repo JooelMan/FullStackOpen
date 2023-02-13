@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 let persons = [
   {
     id: 1,
@@ -14,8 +16,42 @@ let persons = [
   }
 ]
 
+const generateID = () => {
+  min = 0
+  max = 1000
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
 app.get('/api/persons', (req, res) => {
   res.json(persons)
+})
+
+app.post('/api/persons', (req, res) => {
+  const body = req.body
+  console.log(body);
+  
+  
+  if (!body.name || !body.number) {
+    return res.status(400).json({ 
+      error: 'name or number missing' 
+    })
+  }
+
+  if (persons.find(p => p.name === body.name)) {
+    return res.status(400).json({ 
+      error: 'name already in use' 
+    })
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: generateID(),
+  }
+
+  persons = persons.concat(person)
+
+  res.json(person)
 })
 
 app.get('/api/persons/:id', (req, res) => {
