@@ -1,0 +1,2 @@
+GET https://phonebook-app-yo23.onrender.com/api/persons
+Content-Type: application/json
