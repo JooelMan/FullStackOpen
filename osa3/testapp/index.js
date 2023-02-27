@@ -30,12 +30,12 @@ const generateId = () => {
 app.post('/api/notes', (request, response, next) => {
   const body = request.body
 
-  const note = {
+  const note = new Note({
     content: body.content,
     important: body.important || false,
-  }
+  })
   
-  Note.save()
+  note.save()
     .then(savedNote => {
       response.json(savedNote)
     })
