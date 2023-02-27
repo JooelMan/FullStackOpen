@@ -13,13 +13,12 @@ app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(express.static('build'))
 
-//const generateID = () => {
-//  min = 0
-//  max = 1000
-//  return Math.floor(Math.random() * (max - min + 1) + min)
-//}
-
-let persons = []
+app.get('/info', (req, res) => {
+  const date = new Date()
+  Person.find({}).then(people => {
+    res.send(`<p>Phonebook has info for ${people.length} people</p><p>${date}</p>`)
+  })
+})
 
 app.get('/api/persons', (req, res, next) => {
   Person.find({}).then(people => {
@@ -50,10 +49,12 @@ app.post('/api/persons', (req, res) => {
   })
 })
 
-app.get('/api/persons/:id', (req, res) => {
-  Person.findById(req.params.id).then(person => {
-    res.json(person)
-  })
+app.get('/api/persons/:id', (req, res, next) => {
+  Person.findById(req.params.id)
+    .then(person => {
+      res.json(person)
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
@@ -76,11 +77,6 @@ app.put('/api/persons/:id', (req, res, next) => {
       res.json(updatedPerson)
     })
     .catch(error => next(error))
-})
-
-app.get('/info', (req, res) => {
-  const date = new Date()
-  res.send(`<p>Phonebook has info for 2 people</p><p>${date}</p>`)
 })
 
 const unknownEndpoint = (request, response) => {
