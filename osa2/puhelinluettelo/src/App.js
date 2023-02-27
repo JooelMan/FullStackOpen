@@ -71,8 +71,12 @@ const App = () => {
         setPersons(persons.concat(returnedObj))
         setNewName('')
         setNewNumber('')
+        notificate(`Added ${newName}`)
       })
-    notificate(`Added ${newName}`)
+      .catch(error => {
+        console.log(error)
+        showError(JSON.stringify(error.response.data.error))
+      })
   }
 
   const deleteNumber = (id, name) => {
