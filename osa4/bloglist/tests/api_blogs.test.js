@@ -95,6 +95,26 @@ describe('POST /api/blogs', () => {
 
 })
 
+describe('DELETE /api/blogs/:id', () => {
+  
+  test('valid id removes valid object', async () => {
+    const blogs = await helper.blogsInDb()
+    const id = blogs[0].id
+    
+    await api
+      .delete(`/api/blogs/${id}`)
+      .expect(204)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd.length).toBe(blogs.length - 1)
+
+    const titles = blogsAtEnd.map(b => b.titles)
+
+    expect(titles).not.toContain(blogs[0].title)
+  })
+
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
