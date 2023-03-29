@@ -37,10 +37,60 @@ describe('GET /api/blogs', () => {
   test('all blog ids are defined', async () => {
     const response = await api.get('/api/blogs')
     const titles = response.body.map(r => r.id)
-    
+
     titles.forEach(title => {
       expect(title).toBeDefined
     })
+  })
+
+})
+
+describe('POST /api/blogs', () => {
+
+  test('number of blogs increases with 1', async () => {
+    await api
+      .post('/api/blogs')
+      .send(helper.newBlog)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    //console.log(blogsAtEnd);
+    
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
+  })
+
+  test('new blog is returned', async () => {
+    await api
+      .post('/api/blogs')
+      .send(helper.newBlog)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const titles = blogsAtEnd.map(b => b.title)
+    expect(titles).toContain('Delphi 2')
+  })
+
+  test('number of likes is 0 by default when not specifying it', async () => {
+    await api
+      .post('/api/blogs')
+      .send(helper.blogWithoutLikes)
+
+    const blogsAtEnd = await helper.blogsInDb() 
+    const newBlog = blogsAtEnd.filter(b => b.title === 'NotLiked')
+    
+    expect(newBlog[0].likes).toBe(0)
+  })
+
+  test('request without title invokes response status 400', async () => {
+    await api
+      .post('/api/blogs')
+      .send(helper.blogWithoutTitle)
+      .expect(400)
+  })
+
+  test('request without url invokes response status 400', async () => {
+    await api
+      .post('/api/blogs')
+      .send(helper.blogWithoutURL)
+      .expect(400)
   })
 
 })

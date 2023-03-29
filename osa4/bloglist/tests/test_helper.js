@@ -9,12 +9,37 @@ const initialBlogs = [
   },
   {
     title: "React",
-    author: "Michael fantastico",
+    author: "Michael Fantastico",
     url: "http://www.react.edu/book.html",
     likes: 9,
   },
   
 ]
+
+const newBlog = {
+  title: "Delphi 2",
+  author: "Michael Fanta",
+  url: "http://www.react.edu/book.html",
+  likes: 3,
+}
+
+const blogWithoutLikes = {
+  title: "NotLiked",
+  author: "Nobody",
+  url: "http://www.nobody.fi/book.html",
+}
+
+const blogWithoutTitle = {
+  author: "NoTitleGuy",
+  url: "http://www.nobody.fi/book.html",
+  likes: 3,
+}
+
+const blogWithoutURL = {
+  title: "NoURLDude",
+  author: "Nobody",
+  likes: 2
+}
 
 const nonExistingId = async () => {
   const blog = new Blog({ title: 'will be removed soon', author: '', url: '', likes: 0 })
@@ -30,5 +55,5 @@ const blogsInDb = async () => {
 }
 
 module.exports = {
-  initialBlogs, nonExistingId, blogsInDb
+  initialBlogs, nonExistingId, blogsInDb, newBlog, blogWithoutLikes, blogWithoutTitle, blogWithoutURL
 }
