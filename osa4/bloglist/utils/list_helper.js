@@ -1,3 +1,4 @@
+const { jsxClosingElement } = require('@babel/types')
 const lodash = require('lodash')
 
 const dummy = (blogs) => {
@@ -38,6 +39,25 @@ const mostBlogs = (blogs) => {
   }
 }
 
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) return {}
+
+  const grouped = lodash.groupBy(blogs, 'author') // -> { author1: [{'book1'}, {'book2'},...], author2: [...]}  
+  console.log(grouped);
+  
+  const likes = Object.values(grouped).map(arr => lodash.sumBy(arr, 'likes'))
+  console.log(likes);
+  
+  const maxLikes = Math.max(...likes)
+  const maxIndex = lodash.indexOf(likes, maxLikes)  
+  const author = Object.keys(grouped)[maxIndex]
+
+  return {
+    author: author,
+    likes: maxLikes
+  }
+}
+
 module.exports = {
-  dummy, totalLikes, favoriteBlog, mostBlogs
+  dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes
 }

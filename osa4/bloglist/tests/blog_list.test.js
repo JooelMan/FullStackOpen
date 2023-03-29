@@ -201,3 +201,47 @@ describe('most blogs', () => {
   })
 
 })
+
+describe('most likes', () => {
+
+  const blogs = [
+    {
+      _id: "5a422a851b54a676234d17f7",
+      title: "React",
+      author: "MC",
+      url: "www",
+      likes: 3,
+      __v: 0
+    },
+    {
+      _id: "5a42543a851b54a676234d17f7",
+      title: "React 2",
+      author: "MC",
+      url: "www",
+      likes: 7,
+      __v: 0
+    },
+    {
+      _id: "5a422aa71b54a676234d17f8",
+      title: "Go To Statement Considered Harmful",
+      author: "Edsger W. Dijkstra",
+      url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+      likes: 11,
+      __v: 0
+    },
+  ]
+
+  test('returns empty object when given empty array as the input', () => {
+    const result = listHelper.mostLikes([])
+    expect(result).toEqual({})
+  })
+
+  test('returns correct object when given array as the input', () => {
+    const result = listHelper.mostLikes(blogs)
+    expect(result).toEqual({
+      author: "Edsger W. Dijkstra",
+      likes: 11
+    })
+  })
+
+})
