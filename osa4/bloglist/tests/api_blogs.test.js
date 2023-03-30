@@ -115,6 +115,37 @@ describe('DELETE /api/blogs/:id', () => {
 
 })
 
+describe('PUT /api/blogs/:id', () => {
+  
+  test('valid id updates valid object', async () => {
+    const blogs = await helper.blogsInDb()
+    const blogToBeUpdated = blogs[0]
+    
+    await api
+      .put(`/api/blogs/${blogToBeUpdated.id}`)
+      .send({
+        likes: blogToBeUpdated.likes + 2
+      })
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd[0].likes).toBe(blogToBeUpdated.likes + 2)
+  })
+
+  test('non valid id fails with status code 400', async () => {
+    await api
+      .put(`/api/blogs/${helper.initialBlogs[0].id}431`)
+      .send({
+        likes: helper.initialBlogs[0].likes + 2
+      })
+      .expect(400)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd[0].likes).toBe(helper.initialBlogs[0].likes)
+  })
+
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
