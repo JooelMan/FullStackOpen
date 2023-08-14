@@ -13,7 +13,6 @@ const initialBlogs = [
     url: "http://www.react.edu/book.html",
     likes: 9,
   },
-  
 ]
 
 const newBlog = {
