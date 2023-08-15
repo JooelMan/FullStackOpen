@@ -43,6 +43,10 @@ const userWithTooShortPassword = {
   password: "123"
 }
 
+const removeUsers = async () => {
+  await User.findByIdAndRemove({})
+}
+
 module.exports = {
-  initialUsers, userWithoutUsername, userWithoutUniqueUsername, userWithoutName, userWithoutPassword, userWithTooShortPassword
+  removeUsers, initialUsers, userWithoutUsername, userWithoutUniqueUsername, userWithoutName, userWithoutPassword, userWithTooShortPassword
 }

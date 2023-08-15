@@ -1,5 +1,16 @@
 const Blog = require('../models/blog')
 
+const newUser = {
+  username: "testaaja",
+  name: "tester",
+  password: "test"
+}
+
+const loginUser = {
+  username: "testaaja",
+  password: "test"
+}
+
 const initialBlogs = [
   {
     title: "Canonical string reduction",
@@ -53,6 +64,10 @@ const blogsInDb = async () => {
   return blogs.map(blog => blog.toJSON())
 }
 
+const removeBlogs = async () => {
+  await Blog.findByIdAndRemove({})
+}
+
 module.exports = {
-  initialBlogs, nonExistingId, blogsInDb, newBlog, blogWithoutLikes, blogWithoutTitle, blogWithoutURL
+  removeBlogs, newUser, loginUser, initialBlogs, nonExistingId, blogsInDb, newBlog, blogWithoutLikes, blogWithoutTitle, blogWithoutURL
 }

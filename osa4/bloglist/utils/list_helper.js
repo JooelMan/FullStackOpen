@@ -43,10 +43,10 @@ const mostLikes = (blogs) => {
   if (blogs.length === 0) return {}
 
   const grouped = lodash.groupBy(blogs, 'author') // -> { author1: [{'book1'}, {'book2'},...], author2: [...]}  
-  console.log(grouped);
+  //console.log(grouped);
   
   const likes = Object.values(grouped).map(arr => lodash.sumBy(arr, 'likes'))
-  console.log(likes);
+  //console.log(likes);
   
   const maxLikes = Math.max(...likes)
   const maxIndex = lodash.indexOf(likes, maxLikes)  

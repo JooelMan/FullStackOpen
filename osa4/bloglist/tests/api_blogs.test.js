@@ -6,10 +6,35 @@ const api = supertest(app)
 
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
+const user_helper = require('./user_test_helper')
+
+let token = ''
+beforeAll(async () => {
+  await user_helper.removeUsers
+  await helper.removeBlogs
+
+  await api
+    .post('/api/users')
+    .send(helper.newUser)
+
+  await api
+    .post('/api/login')
+    .send(helper.loginUser)
+    .then(response => {
+      token = response.body.token
+    })
+})
 
 beforeEach(async () => {
   await Blog.deleteMany({})
-  await Blog.insertMany(helper.initialBlogs)
+  await api
+    .post('/api/blogs')
+    .set('Authorization', 'Bearer ' + token)
+    .send(helper.initialBlogs[0])
+  await api
+    .post('/api/blogs')
+    .set('Authorization', 'Bearer ' + token)
+    .send(helper.initialBlogs[1])
 })
 
 describe('GET /api/blogs', () => {
@@ -47,20 +72,29 @@ describe('GET /api/blogs', () => {
 
 describe('POST /api/blogs', () => {
 
-  test('number of blogs increases with 1', async () => {
+  test('user is unauthorized to add blog if requst has no token', async () => {
     await api
       .post('/api/blogs')
       .send(helper.newBlog)
+      .expect(401)
+  })
+
+  test('number of blogs increases with 1', async () => {
+    await api
+      .post('/api/blogs')
+      .set('Authorization', 'Bearer ' + token)
+      .send(helper.newBlog)
 
     const blogsAtEnd = await helper.blogsInDb()
-    //console.log(blogsAtEnd);
     
     expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
   })
 
   test('new blog is returned', async () => {
+
     await api
       .post('/api/blogs')
+      .set('Authorization', 'Bearer ' + token)
       .send(helper.newBlog)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -71,6 +105,7 @@ describe('POST /api/blogs', () => {
   test('number of likes is 0 by default when not specifying it', async () => {
     await api
       .post('/api/blogs')
+      .set('Authorization', 'Bearer ' + token)
       .send(helper.blogWithoutLikes)
 
     const blogsAtEnd = await helper.blogsInDb() 
@@ -82,6 +117,7 @@ describe('POST /api/blogs', () => {
   test('request without title invokes response status 400', async () => {
     await api
       .post('/api/blogs')
+      .set('Authorization', 'Bearer ' + token)
       .send(helper.blogWithoutTitle)
       .expect(400)
   })
@@ -89,6 +125,7 @@ describe('POST /api/blogs', () => {
   test('request without url invokes response status 400', async () => {
     await api
       .post('/api/blogs')
+      .set('Authorization', 'Bearer ' + token)
       .send(helper.blogWithoutURL)
       .expect(400)
   })
@@ -99,10 +136,12 @@ describe('DELETE /api/blogs/:id', () => {
   
   test('valid id removes valid object', async () => {
     const blogs = await helper.blogsInDb()
+    
     const id = blogs[0].id
     
     await api
       .delete(`/api/blogs/${id}`)
+      .set('Authorization', 'Bearer ' + token)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
