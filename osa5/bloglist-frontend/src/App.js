@@ -1,3 +1,4 @@
+import './index.css'
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
@@ -6,8 +7,12 @@ import loginService from './services/login'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
+  const [notification, setNotification] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -21,6 +26,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
@@ -34,9 +40,14 @@ const App = () => {
       window.localStorage.setItem(
         'loggedNoteappUser', JSON.stringify(user)
       )
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
+      setNotification(`Logged in as ${user.username}`)
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     } catch (exception) {
       setErrorMessage('wrong credentials')
       setTimeout(() => {
@@ -49,6 +60,26 @@ const App = () => {
   const handleLogout = async (event) => {
     event.preventDefault()
     window.localStorage.removeItem('loggedNoteappUser')
+  }
+
+  const createBlog = async (event) => {
+    event.preventDefault()
+    try {
+      await blogService.create({
+        title: title,
+        author: author,
+        url: url
+      })
+      setNotification(`new blog: ${title} by ${author} added`)
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    } catch (error) { 
+      setErrorMessage(error.message)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
   }
 
   const loginForm = () => (
@@ -83,9 +114,65 @@ const App = () => {
     </div>
   )
 
+  const blogForm = () => (
+    <div>
+      <h2>create new</h2>
+      <form onSubmit={createBlog}>
+        <div>
+          title:
+          <input
+            type="text"
+            value={title}
+            name="Title"
+            onChange={({ target }) => setTitle(target.value)}
+          />
+        </div>
+        <div>
+          author:
+          <input
+            type="text"
+            value={author}
+            name="Author"
+            onChange={({ target }) => setAuthor(target.value)}
+          />
+        </div>
+        <div>
+          url:
+          <input
+            type="text"
+            value={url}
+            name="Url"
+            onChange={({ target }) => setUrl(target.value)}
+          />
+        </div>
+        <button type="submit">create</button>    
+      </form>
+    </div>
+  )
+
+  const showNotification = () => {
+    if (notification) {
+      return (
+        <div className="notification">
+          {notification}
+        </div>
+      )
+    }
+    if (errorMessage){
+      return (
+        <div className="error">
+          {errorMessage}
+        </div>
+      )
+    }
+    
+    return null
+  }
+
   return (
     <div>
       {!user && <h2>Login</h2>}
+      {showNotification()}
       {!user && loginForm()}
       {user && <h2>blogs</h2>}
       {user && 
@@ -96,6 +183,7 @@ const App = () => {
           </form>
         </div>
       }
+      {user && blogForm()}
       {user && <div>{blogsList()}</div>} 
     </div>
   )
