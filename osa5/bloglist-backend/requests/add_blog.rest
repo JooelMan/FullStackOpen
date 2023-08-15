@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikpva2tlMyIsImlkIjoiNjRkYTQxY2QzY2U5OWRjOWRjOTIzZmUyIiwiaWF0IjoxNjkyMDkzMDExfQ.OcSaxLNSLb_wuu7Ufg2lXNV7aR4ErpUrrPSOPJY9Eco
+
+{
+  "title": "joujasdfsdou",
+  "author": "Jake",
+  "url": "www.jou.fi",
+  "likes": 1650
+}
