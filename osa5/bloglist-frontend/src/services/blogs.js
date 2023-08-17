@@ -21,5 +21,29 @@ const create = async newObject => {
   return response.data
 }
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default { create, getAll, setToken }
+const addLikeToDB = async blog => {
+  const updatedBlog = {
+    user: blog.user,
+    likes: blog.likes + 1,
+    author: blog.author,
+    title: blog.title,
+    url: blog.url
+  }
+
+  const response = await axios.put(baseUrl + '/' + blog.id, updatedBlog)
+  console.log(response.data)
+
+  return response.data
+}
+
+const removeBlogFromDB = async (blog) => {
+  const config = {
+    headers: { Authorization: token }
+  }
+  console.log(config)
+
+  const response = await axios.delete(baseUrl + '/' + blog.id, config)
+  return response.data
+}
+
+export default { addLikeToDB, create, getAll, removeBlogFromDB, setToken }
