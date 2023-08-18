@@ -54,7 +54,6 @@ const App = () => {
         setErrorMessage(null)
       }, 5000)
     }
-    //console.log('logging in with', username, password);
   }
 
   const handleLogout = async (event) => {
@@ -112,7 +111,7 @@ const App = () => {
   )
 
   const blogForm = () => (
-    <Togglable buttonLabel="create blog" ref={blogFormRef}>
+    <Togglable buttonLabel="create blog" ref={blogFormRef} buttonID="create-blog">
       <BlogForm
         createBlog={createBlog}
       />
@@ -156,7 +155,7 @@ const App = () => {
         <div>
           <p>{user.name} logged in</p>
           <form onSubmit={handleLogout}>
-            <button type="submit">logout</button>
+            <button type="submit" id="logout-button">logout</button>
           </form>
         </div>
       }
